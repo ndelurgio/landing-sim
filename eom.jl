@@ -13,14 +13,14 @@ end
 
 function update_attitude!(q̇ⁱᵇ, qⁱᵇ, parm, t)
     ωᵇ = parm.ωᵇ
-    ω₁, ω₂, ω₃ = ωᵇ ./ 2
+    ω₁, ω₂, ω₃ = ωᵇ
     Ω = [
         0  -ω₁ -ω₂ -ω₃
         ω₁  0   ω₃ -ω₂
         ω₂ -ω₃  0   ω₁
         ω₃  ω₂ -ω₁  0
         ]
-    q̇ⁱᵇ .= Ω * qⁱᵇ
+    q̇ⁱᵇ .= 0.5 * Ω * qⁱᵇ
 end
 
 function update_velocity!(v̇ⁱ, vⁱ, parm, t)
@@ -30,7 +30,7 @@ function update_velocity!(v̇ⁱ, vⁱ, parm, t)
     qⁱᵇ = QuatRotation(parm.qⁱᵇ)
 
     vᵇ = qⁱᵇ * vⁱ 
-    v̇ᵇ = (1/m) * Fᵇ - ωᵇ × vᵇ
+    v̇ᵇ = (1/m) * Fᵇ + ωᵇ × vᵇ
     v̇ⁱ .= qⁱᵇ \ v̇ᵇ
 end
 
@@ -51,7 +51,7 @@ function update_state!(ẋ, x, parm, t)
 end
 
 ## Init State
-x₀ = ComponentArray(pⁱ = [0.0,0.0,0.0], vⁱ = [0.0,0.0,0.0], ωᵇ = [0.5,0.8,0.0], qⁱᵇ = [1.0,0.0,0.0,0.0])
+x₀ = ComponentArray(pⁱ = [0.0,0.0,0.0], vⁱ = [0.0,0.0,0.0], ωᵇ = [0.0,0.0,0.0], qⁱᵇ = [1.0,0.0,0.0,0.0])
 # x = x₀
 
 ## Init State Derivative
@@ -68,10 +68,11 @@ I₀ = [
 ]
 Iᵇ = I₀
 
-Mᵇ = [0.0,0.0,0.0]
-Fᵇ = [0.0,0.0,0.0]
+Mᵇ = [0.0,0.1,0.0]
+Fᵇ = [0.0,0.0,30.0]
 parm = (m=m,Iᵇ=Iᵇ,Mᵇ=Mᵇ,Fᵇ=Fᵇ)
 
 tspan = (0,50)
 prob = ODEProblem(update_state!,x₀,tspan,parm)
-sim = solve(prob,RK4(),dt=0.01)
+reltol = 1e-8
+sim = solve(prob,RK4(),reltol=reltol)
