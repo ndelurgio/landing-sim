@@ -1,5 +1,3 @@
-## x: state vector: [position (inertial), velocity (inertial), angular velocity (body), quaternion (inertial to body)
-
 function update_body_rate!(ω̇ᵇ, ωᵇ, parm, t)
     Iᵇ = parm.Iᵇ
     Mᵇ = parm.Mᵇ
@@ -46,14 +44,24 @@ function update_inertia!(İᵇ, Iᵇ, t)
     ]
 end
 
+function update_cg!(cg,t)
+    cg = cg
+end
+
+function update_actuators!(x, parm, t)
+    update_mainEngine!(x.mainEngine, parm, t)
+end
+
 function update_state!(ẋ, x, parm, t)
     Fₑ, Mₑ = get_enviornment(x)
-    Fₐ, Mₐ = get_actuators(x)
-    Fᵇ = Fₑ .+ Fₐ
-    Mᵇ = Mₑ .+ Mₐ
+    update_actuators!(x, parm, t)
+    Fₐ, Mₐ = get_actuators(x,parm)
+    Fᵇ = Fₑ .+ Fₐ ## Total Body Forces
+    Mᵇ = Mₑ .+ Mₐ ## Totaly Body Moments
 
     update_mass!(ẋ.m,x.m,t)
     update_inertia!(ẋ.Iᵇ, x.Iᵇ, t)
+    update_cg!(x.cg,t)
     update_body_rate!(ẋ.ωᵇ, x.ωᵇ,  (Iᵇ=x.Iᵇ, Mᵇ=Mᵇ),                   t)
     update_attitude!(ẋ.qⁱᵇ, x.qⁱᵇ, (ωᵇ=x.ωᵇ,),                       t)
     update_velocity!(ẋ.vⁱ,  x.vⁱ,  (m=x.m, Fᵇ=Fᵇ, ωᵇ=x.ωᵇ, qⁱᵇ=x.qⁱᵇ), t)

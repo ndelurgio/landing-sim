@@ -47,25 +47,25 @@ end
 plt = ()
 theme(:dark)
 ## 3 Axis Position
-display(plot(plot(t,px,label="X"),
-        plot(t,py,label="Y",title="Inerital Position"),
-        plot(t,pz,label="Z"),
+display(plot(plot(t,px,label="X (m)"),
+        plot(t,py,label="Y (m)",title="Inerital Position"),
+        plot(t,pz,label="Z (m)"),
         lw=2,layout=(1,3),size=(1020,420),bottom_margin=4mm,xlabel="Time (s)",top_margin = 1mm,margin=-0.5mm,reuse=false))
 ## 3D Position
 
 ## 3 Axis Velocity
-display(plot(plot(t,vx,label="Vx"),
-        plot(t,vy,label="Vy",title="Inerital Velocity"),
-        plot(t,vz,label="Vz"),
+display(plot(plot(t,vx,label="Vx (m/s)"),
+        plot(t,vy,label="Vy (m/s)",title="Inerital Velocity"),
+        plot(t,vz,label="Vz (m/s)"),
         lw=2,layout=(1,3),size=(1020,420),bottom_margin=4mm,xlabel="Time (s)",top_margin = 1mm,margin=-0.5mm,reuse=false))
 ## 3 Axis Angular Velocity
-display(plot(plot(t,ωx,label="ωx"),
-        plot(t,ωy,label="ωy",title="Body Rates"),
-        plot(t,ωz,label="ωz"),
+display(plot(plot(t,ωx*180/pi,label="ωx (deg/s)"),
+        plot(t,ωy*180/pi,label="ωy (deg/s)",title="Body Rates"),
+        plot(t,ωz*180/pi,label="ωz (deg/s)"),
         lw=2,layout=(1,3),size=(1020,420),bottom_margin=4mm,xlabel="Time (s)",top_margin = 1mm,margin=-0.5mm,reuse=false))
 ## Attitude Angles
-display(plot(plot(t,ϕ,label="ϕ (Roll)"),
-        plot(t,θ,label="θ (Pitch)",title="Euler Angles"),
-        plot(t,ψ,label="ψ (Yaw)"),
+display(plot(plot(t,ϕ*180/pi,label="ϕ (Roll, deg)"),
+        plot(t,θ*180/pi,label="θ (Pitch, deg)",title="Euler Angles"),
+        plot(t,ψ*180/pi,label="ψ (Yaw, deg)"),
         lw=2,layout=(1,3),size=(1020,420),bottom_margin=4mm,xlabel="Time (s)",top_margin = 1mm,margin=-0.5mm,reuse=false))
 display(plot(t,[qw,q₁,q₂,q₃],title="Quaternion (Inerital to Body)",label=["qw" "q1" "q2" "q3"]))

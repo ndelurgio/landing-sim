@@ -9,7 +9,8 @@ include("sixdof/dynamics/eom.jl")
 include("sixdof/dynamics/enviornment.jl")
 include("sixdof/dynamics/actuator_models.jl")
 include("sixdof/dynamics/sensor_models.jl")
-parm = ()
+
+parm = (mainEngine=mainEngine,)
 prob = ODEProblem(update_state!,vehicle,tspan,parm)
 # print(prob)s
 reltol = 1e-8
