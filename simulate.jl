@@ -11,7 +11,6 @@ include("sixdof/dynamics/actuator_models.jl")
 include("sixdof/dynamics/sensor_models.jl")
 include("sixdof/gnc/control.jl")
 
-parm = (mainEngine=mainEngine,)
 prob = ODEProblem(update_state!,vehicle,tspan,parm)
 reltol = 1e-8
 println("Configuration Complete. Running Simulation...")

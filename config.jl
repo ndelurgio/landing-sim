@@ -1,7 +1,7 @@
 ## Initial State
 p₀ = [0.0, 0.0, 0.0]
 v₀ = [0.0, 0.0, 0.0]
-ω₀ = [0.0, 0.0, 0.0]
+ω₀ = [0.01, 0.03, 0.0]
 q₀ = [1.0, 0.0, 0.0, 0.0]
 
 ## Initial Vehicle Properties
@@ -17,8 +17,6 @@ cg₀ = [0.0,0.0,0.35]
 tspan = (0,50)
 
 ## Main Engine Setup
-# import("sixdof/types/actuators/mainEngine.jl")
-# using "sixdof/types/actuators/mainEngine.jl"
 rotation_misalign = 0.000
 offset_misalign = 0.0000
 mainEngine = (
@@ -32,6 +30,13 @@ mainEngine = (
 throttle₀ = 0.0
 uᵣ₀ = 0.0 ## roll off zero, rad
 uₚ₀ = 0.0 ## pitch off zero, rad
+
+## Controller Setup
+include("scripts/lqr_design.jl")
+
+## Enable/Disable Disturbances
+enable_disturbances = false
+bypass_actuators = true
 
 ## Init State
 vehicle = ComponentArray(
@@ -47,3 +52,11 @@ vehicle = ComponentArray(
                 uᵣ = uᵣ₀,
                 uₚ = uₚ₀
             ))
+
+## Init Params
+parm =  (
+        mainEngine=mainEngine,
+        enable_disturbances=enable_disturbances,
+        bypass_actuators=bypass_actuators,
+        controller=L
+        )
