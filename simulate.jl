@@ -13,8 +13,9 @@ include("sixdof/gnc/control.jl")
 
 prob = ODEProblem(update_state!,vehicle,tspan,parm)
 reltol = 1e-8
+dt = 0.01
 println("Configuration Complete. Running Simulation...")
-sim = solve(prob,RK4(),reltol=reltol)
+sim = solve(prob,RK4(),adaptive=false,dt=dt)
 println("Finished. Plotting...")
 include("plot.jl")
 println("Done.")

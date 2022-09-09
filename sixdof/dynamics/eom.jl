@@ -51,10 +51,12 @@ end
 function update_state!(ẋ, x, parm, t)
     Fₑ, Mₑ = get_enviornment(x,parm,t)
     if parm.bypass_actuators == false
+        # x.control.Mcmd = get_controlCmd(x, parm,t)
         update_actuators!(x, parm, t)
         Fₐ, Mₐ = get_actuators(x,parm)
+        x.control.Mreal = Mₐ
     else
-        Mₐ =  get_controlCmd(x, parm)
+        Mₐ =  get_controlCmd(x, parm,t)
         Fₐ = [0.0,0.0,440.0]
     end
     Fᵇ = Fₑ .+ Fₐ ## Total Body Forces

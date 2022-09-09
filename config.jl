@@ -1,5 +1,5 @@
 ## Initial State
-p₀ = [0.0, 0.0, 0.0]
+p₀ = [0.0, 0.0, 100.0]
 v₀ = [0.0, 0.0, 0.0]
 ω₀ = [0.01, 0.03, 0.0]
 q₀ = [1.0, 0.0, 0.0, 0.0]
@@ -18,14 +18,15 @@ tspan = (0,50)
 
 ## Main Engine Setup
 rotation_misalign = 0.000
-offset_misalign = 0.0000
+offset_misalign = 0.000
 mainEngine = (
     p = [0.0,0.0,0.0],
     axis= RotYZ(offset_misalign, rotation_misalign) * [0.0,0.0,1.0],
     ṁ_max = 0.2,
     isp = 223.163,
     min_throttle=0.2,
-    Pₑ=0.0
+    Pₑ=0.0,
+    uₚ_max = 5 * pi/180
 )
 throttle₀ = 0.0
 uᵣ₀ = 0.0 ## roll off zero, rad
@@ -36,7 +37,7 @@ include("scripts/lqr_design.jl")
 
 ## Enable/Disable Disturbances
 enable_disturbances = false
-bypass_actuators = true
+bypass_actuators = false
 
 ## Init State
 vehicle = ComponentArray(
@@ -51,6 +52,10 @@ vehicle = ComponentArray(
                 throttle = throttle₀,
                 uᵣ = uᵣ₀,
                 uₚ = uₚ₀
+            ),
+            control = (
+                Mcmd = [0.0,0.0,0.0],
+                Mreal = [0.0,0.0,0.0]
             ))
 
 ## Init Params

@@ -2,7 +2,8 @@ function get_mainEngine(mainEngineState,mainEngineProperties,cg)
     ṁ = mainEngineProperties.ṁ_max * mainEngineState.throttle
     vₑ = mainEngineProperties.isp * 9.81
     Thrust = ṁ * vₑ
-    gimbal = RotYZ(mainEngineState.uₚ, mainEngineState.uᵣ)
+    # gimbal = RotYZ(mainEngineState.uₚ, mainEngineState.uᵣ)
+    gimbal = RotZY(mainEngineState.uᵣ,mainEngineState.uₚ)
     thrust_axis = gimbal * mainEngineProperties.axis
     F_engine = Thrust * thrust_axis
     r = mainEngineProperties.p - cg
