@@ -1,7 +1,7 @@
 ## Initial State
 p₀ = [0.0, 0.0, 100.0]
 v₀ = [0.0, 0.0, 0.0]
-ω₀ = [0.01, 0.03, 0.0]
+ω₀ = [0.05, 0.1, 0.0]
 q₀ = [1.0, 0.0, 0.0, 0.0]
 
 ## Initial Vehicle Properties
@@ -55,7 +55,9 @@ vehicle = ComponentArray(
             ),
             control = (
                 Mcmd = [0.0,0.0,0.0],
-                Mreal = [0.0,0.0,0.0]
+                Mreal = [0.0,0.0,0.0],
+                Fcmd = [0.0,0.0,0.0],
+                Freal = [0.0,0.0,0.0]
             ))
 
 ## Init Params

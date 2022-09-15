@@ -55,10 +55,11 @@ function update_state!(ẋ, x, parm, t)
         update_actuators!(x, parm, t)
         Fₐ, Mₐ = get_actuators(x,parm)
         x.control.Mreal = Mₐ
+        x.control.Freal = Fₐ
     else
-        Mₐ =  get_controlCmd(x, parm,t)
-        Fₐ = [0.0,0.0,440.0]
+        Mₐ,Fₐ =  get_controlCmd(x, parm,t)
     end
+    
     Fᵇ = Fₑ .+ Fₐ ## Total Body Forces
     Mᵇ = Mₑ .+ Mₐ ## Totaly Body Moments
 
@@ -67,6 +68,15 @@ function update_state!(ẋ, x, parm, t)
     update_cg!(x.cg,t)
     update_body_rate!(ẋ.ωᵇ, x.ωᵇ,  (Iᵇ=x.Iᵇ, Mᵇ=Mᵇ),                   t)
     update_attitude!(ẋ.qⁱᵇ, x.qⁱᵇ, (ωᵇ=x.ωᵇ,),                         t)
-    update_velocity!(ẋ.vⁱ,  x.vⁱ,  (m=x.m, Fᵇ=Fᵇ, ωᵇ=x.ωᵇ, qⁱᵇ=x.qⁱᵇ), t)
-    update_position!(ẋ.pⁱ,  x.pⁱ,  (vⁱ=x.vⁱ,),                         t)
+    if x.vⁱ[3] < 0.0 && x.pⁱ[3] < 0.0 ## indicates ground contact
+        ẋ.vⁱ = [0.0,0.0,0.0]
+        ẋ.pⁱ[3] = -1e-9
+    else
+        update_velocity!(ẋ.vⁱ,  x.vⁱ,  (m=x.m, Fᵇ=Fᵇ, ωᵇ=x.ωᵇ, qⁱᵇ=x.qⁱᵇ), t)
+        update_position!(ẋ.pⁱ,  x.pⁱ,  (vⁱ=x.vⁱ,),                         t)
+    end
+    ## Check to Terminate Simulation
+    # if x.pⁱ[3] < 0.0
+    #     terminate!(update_state!)
+    # end
 end

@@ -28,6 +28,13 @@ Mcmd_z = Vector{Float64}()
 Mctrl_x = Vector{Float64}()
 Mctrl_y = Vector{Float64}()
 Mctrl_z = Vector{Float64}()
+Fcmd_x = Vector{Float64}()
+Fcmd_y = Vector{Float64}()
+Fcmd_z = Vector{Float64}()
+Fctrl_x = Vector{Float64}()
+Fctrl_y = Vector{Float64}()
+Fctrl_z = Vector{Float64}()
+throttle = Vector{Float64}()
 for state in sim.u
     append!(px,state.pⁱ[1])
     append!(py,state.pⁱ[2])
@@ -58,6 +65,13 @@ for state in sim.u
     append!(Mctrl_x,state.control.Mreal[1])
     append!(Mctrl_y,state.control.Mreal[2])
     append!(Mctrl_z,state.control.Mreal[3])
+    append!(Fcmd_x,state.control.Fcmd[1])
+    append!(Fcmd_y,state.control.Fcmd[2])
+    append!(Fcmd_z,state.control.Fcmd[3])
+    append!(Fctrl_x,state.control.Freal[1])
+    append!(Fctrl_y,state.control.Freal[2])
+    append!(Fctrl_z,state.control.Freal[3])
+    append!(throttle,state.mainEngine.throttle)
 end
 
 plt = ()
@@ -87,9 +101,15 @@ display(plot(plot(t,ϕ*180/pi,label="ϕ (Roll, deg)"),
 display(plot(t,[qw,q₁,q₂,q₃],title="Quaternion (Inerital to Body)",label=["qw" "q1" "q2" "q3"]))
 display(plot(plot(t,uᵣ*180/pi,label="uᵣ (deg)",title="Gimbal Rotation Angle"),
         plot(t,uₚ*180/pi,label="uₚ (deg)",title="Gimbal Pitch Angle"),
-        lw=2,layout=(1,2),size=(1020,420),bottom_margin=4mm,xlabel="Time (s)",top_margin = 1mm,margin=-0.5mm,reuse=false))
+        plot(t,throttle,label="throttle",title="Throttle"),
+        lw=2,layout=(1,3),size=(1020,420),bottom_margin=4mm,xlabel="Time (s)",top_margin = 1mm,margin=-0.5mm,reuse=false))
 
 display(plot(plot(t,[Mcmd_x,Mctrl_x],label=["x cmd" "x ctrl"]),
         plot(t,[Mcmd_y,Mctrl_y],label=["y cmd" "y ctrl"],title="Control Moments"),
         plot(t,[Mcmd_z,Mctrl_z],label=["z cmd" "z ctrl"]),
+        lw=2,layout=(1,3),size=(1020,420),bottom_margin=4mm,xlabel="Time (s)",top_margin = 1mm,margin=-0.5mm,reuse=false))
+
+display(plot(plot(t,[Fcmd_x,Fctrl_x],label=["x cmd" "x ctrl"]),
+        plot(t,[Fcmd_y,Fctrl_y],label=["y cmd" "y ctrl"],title="Control Forces"),
+        plot(t,[Fcmd_z,Fctrl_z],label=["z cmd" "z ctrl"]),
         lw=2,layout=(1,3),size=(1020,420),bottom_margin=4mm,xlabel="Time (s)",top_margin = 1mm,margin=-0.5mm,reuse=false))
