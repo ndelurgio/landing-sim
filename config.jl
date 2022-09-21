@@ -36,7 +36,7 @@ uₚ₀ = 0.0 ## pitch off zero, rad
 include("scripts/lqr_design.jl")
 
 ## Enable/Disable Disturbances
-enable_disturbances = false
+enable_disturbances = true
 bypass_actuators = false
 
 ## Init State

@@ -25,13 +25,10 @@ function get_controlCmd!(x, parm, t)
     q = x.qⁱᵇ[2:4]
     Mc = -L * vcat(ωᵇ,q)
 
-    ## descent velocity controller
-    if x.pⁱ[3] < 25
-        v_cmd = -0.5
-    else
-        v_cmd = -10
-    end
+    ## descent velocity guidance
+    v_cmd = get_guidanceCmd(x,t)
 
+    ## descent velocity controller
     v_curr = x.vⁱ[3]
     v_err = v_cmd - v_curr
     K = 1

@@ -10,6 +10,8 @@ include("sixdof/dynamics/enviornment.jl")
 include("sixdof/dynamics/actuator_models.jl")
 include("sixdof/dynamics/sensor_models.jl")
 include("sixdof/gnc/control.jl")
+include("sixdof/gnc/guidance.jl")
+
 
 prob = ODEProblem(update_state!,vehicle,tspan,parm)
 reltol = 1e-8
